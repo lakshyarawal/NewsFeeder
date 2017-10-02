@@ -34,24 +34,29 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FeedFragment extends Fragment {
     RecyclerView articleRecyclerView;
     ArticleAdapter articleAdapter;
+    String source = "the-next-web";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.feed_fragment, container, false);
         articleRecyclerView = v.findViewById(R.id.article_recycler_view);
-        fetchReviews();
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+           source = bundle.getString("source","the-next-web");
+        }
+        fetchReviews(source);
         return v;
     }
 
 
-    private void fetchReviews() {
+    private void fetchReviews(String source) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://newsapi.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-        Call<ArticleResponse> call = apiInterface.getArticleResponse("the-next-web","latest",Keys.API_KEY);
+        Call<ArticleResponse> call = apiInterface.getArticleResponse(source,"latest",Keys.API_KEY);
 
         call.enqueue(new Callback<ArticleResponse>() {
             @Override

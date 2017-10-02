@@ -1,6 +1,8 @@
 package com.example.lakshya.myapplication.Fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.lakshya.myapplication.Adapters.SourceAdapter;
+import com.example.lakshya.myapplication.MainActivity;
 import com.example.lakshya.myapplication.Network.ApiInterface;
 import com.example.lakshya.myapplication.Network.Source;
 import com.example.lakshya.myapplication.Network.SourceResponse;
@@ -77,13 +80,23 @@ public class TrendingFragment extends Fragment {
          @Override
          public void onItemClick(View view, int position) {
              Source source = sourceArrayList.get(position);
-             Log.i("Tag",source.getName()+"Clicked");
-             Intent i = new Intent();
-             i.setAction(Intent.ACTION_VIEW);
-             Uri uri = Uri.parse(source.getUrl());
-             i.setData(uri);
+//             Log.i("Tag",source.getName()+"Clicked");
+//             Intent i = new Intent();
+//             i.setAction(Intent.ACTION_VIEW);
+//             Uri uri = Uri.parse(source.getUrl());
+//             i.setData(uri);
+//
+//             startActivity(i);
+             FeedFragment feedFragment = new FeedFragment();
+             Bundle bundle = new Bundle();
+             bundle.putString("source",source.getId());
+             feedFragment.setArguments(bundle);
+             FragmentManager fragmentManager = getFragmentManager();
 
-             startActivity(i);
+// Replace whatever is in the fragment_container view with this fragment,
+// and add the transaction to the back stack if needed
+             fragmentManager.beginTransaction().replace(R.id.content,feedFragment).commit();
+
          }
      });
         sourceRecyclerView.setAdapter(adapter);
